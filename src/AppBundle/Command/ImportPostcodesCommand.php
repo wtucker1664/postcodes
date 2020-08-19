@@ -61,7 +61,7 @@ class ImportPostcodesCommand extends Command {
             $zip->extractTo($path);
             $zip->close();
             
-            $csv = Reader::createFromPath($path.'/Data/ONSPD_MAY_2020_UK.csv', 'r');
+            $csv = Reader::createFromPath($path.'/Data/ONSPD_MAY_2020_UK.csv', 'r'); // Forgotten this was hard coded would have changed this also to pick up the file from teh directory.
             
            // $headers = $csv->fetchOne();
 //            for($i=0;$i<sizeof($headers);$i++){
