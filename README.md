@@ -99,6 +99,9 @@ download the zip file and run as follows
 
 bin/console app:import-postcodes /var/www/html/postcodes/2020-05.zip
 
+If I had more time I would have liked to fix the issues which would be caused running the same file more than once
+and have it download by it's self rather than having to pass in the location. 
+
 where /var/www/html/postcodes/2020-05.zip is the location of the zip file.
 
 Routes for json output are
