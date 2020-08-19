@@ -100,7 +100,9 @@ download the zip file and run as follows
 bin/console app:import-postcodes /var/www/html/postcodes/2020-05.zip
 
 If I had more time I would have liked to fix the issues which would be caused running the same file more than once
-and have it download by it's self rather than having to pass in the location. 
+and have it download by it's self rather than having to pass in the location. Also with the database I may with more
+time to think about it split the postcodes into separate tables as this may speed up searching later on if all records
+are entered. I ran into memory problems trying to import the whole database which is why I fixed it at 25.
 
 where /var/www/html/postcodes/2020-05.zip is the location of the zip file.
 
