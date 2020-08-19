@@ -78,4 +78,38 @@ Enjoy!
 [15]: https://symfony.com/doc/current/setup.html
 =======
 # postcodes
+
+You will need to add the parameters.yaml file
+
+then create the database symfony
+
+and add the following
+
+CREATE TABLE `postcode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `postcode` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lat` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lon` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+Install the vendor directory
+
+download the zip file and run as follows
+
+bin/console app:import-postcodes /var/www/html/postcodes/2020-05.zip
+
+where /var/www/html/postcodes/2020-05.zip is the location of the zip file.
+
+Routes for json output are
+
+/postcode/{lat}/{lon}
+
+/postcode/{postcode} Can be full or partial
+
+Run tests I have used codeception for unit testing I would have done some functional and acceptance testing but I have ran out of time.
+
+vendor/bin/codecept run
+
+
 >>>>>>> c5a1240aed06b3c0ccdc58f33149a4d68a949434
