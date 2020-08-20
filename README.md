@@ -81,7 +81,7 @@ Enjoy!
 
 You will need to add the parameters.yaml file
 
-then create the database symfony
+then create the database
 
 and add the following
 
