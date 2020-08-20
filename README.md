@@ -81,19 +81,13 @@ Enjoy!
 
 You will need to add the parameters.yaml file
 
-then create the database
-
-and add the following
-
-CREATE TABLE `postcode` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `postcode` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lat` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lon` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 Install the vendor directory
+
+then create the database and entity table
+
+bin/console doctrine:database:create
+
+bin/console doctrine:schema:update --force 
 
 download the zip file and run as follows
 
