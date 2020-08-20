@@ -31,14 +31,14 @@ class Postcode
     /**
      * @var string
      *
-     * @ORM\Column(name="lat", type="decimal", precision=7, scale=0)
+     * @ORM\Column(name="lat", type="decimal", precision=7, scale=7)
      */
     private $lat;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lon", type="decimal", precision=7, scale=0)
+     * @ORM\Column(name="lon", type="decimal", precision=7, scale=7)
      */
     private $lon;
 
