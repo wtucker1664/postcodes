@@ -30,7 +30,7 @@ class DefaultController extends Controller
        
         $lat = $request->get("lat");
         $lon = $request->get('lon');
-        $this->postcodeRepository = $this->get('postcodeRepository');
+        $this->postcodeRepository = $this->getDoctrine()->getRepository("AppBundle:Postcode");
 
         $result = $this->postcodeRepository->findByLatLonPostcode($lat,$lon);
         
