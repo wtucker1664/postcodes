@@ -45,6 +45,7 @@ class ImportPostcodesCommand extends Command {
         $filesystem = new Filesystem();
         $path = $this->projectDir.'/../var/unziped';
         $data = $path."/Data";
+        
         $output->writeLn(['Output Path',$path]);
         try {
             $filesystem->mkdir($path);
@@ -59,47 +60,53 @@ class ImportPostcodesCommand extends Command {
             
             $zip->extractTo($path);
             $zip->close();
+            $files = scandir($data);
             
-            $csv = Reader::createFromPath($path.'/Data/ONSPD_MAY_2020_UK.csv', 'r'); // Forgotten this was hard coded would have changed this also to pick up the file from teh directory.
+            for($i=0;$i<sizeof($files);$i++){
+                if(\preg_match('/(\.csv)/',$files[$i])){
+                   $output->writeLn([$files[$i]]);
+                   $csv = Reader::createFromPath($path.'/Data/'.$files[$i], 'r'); 
             
-            $numRows = $csv->each(function ($row) {
-                return true;
-            });
-           
-           // $headers = $csv->fetchOne();
-//            for($i=0;$i<sizeof($headers);$i++){
-//                $output->writeLn([$headers[$i],"Header number ".$i]);
-//            }
-            //$header = implode(',',$csv->fetchOne()); //returns the CSV header record
-            // postcode 0
-            // lat 42
-            // long 43
-           
-            
-            // Going to leave output->writeLn in for now.
-            $r = ceil($numRows/25);
-            $num = 1;
-            $continue = false;
-            for($n=0;$n<$r;$n++){
-                $records = $csv->setOffset($num)->setLimit(25)->fetchAll();
-                
-                for($i=0;$i<sizeof($records);$i++){ // Not checking for existing at this point.
-                    $postcode = new Postcode();
-                    $postcode->setPostcode($records[$i][0]);
-                    $postcode->setLat($records[$i][42]);
-                    $postcode->setLon($records[$i][43]);
-                    $output->writeLn(['lat '.$postcode->getlat(),'lon '.$postcode->getlon()]);
+                    $numRows = $csv->each(function ($row) {
+                        return true;
+                    });
 
-                    $em->persist($postcode);
-                    $em->flush();
-                    $output->writeLn(['ID '.$postcode->getId()]);
-                    $num++;
+                   // $headers = $csv->fetchOne();
+        //            for($i=0;$i<sizeof($headers);$i++){
+        //                $output->writeLn([$headers[$i],"Header number ".$i]);
+        //            }
+                    //$header = implode(',',$csv->fetchOne()); //returns the CSV header record
+                    // postcode 0
+                    // lat 42
+                    // long 43
+                    // Going to leave output->writeLn in for now.
+
+                    $r = ceil($numRows/25);
+                    $num = 1;
+                    for($n=0;$n<$r;$n++){
+                        $records = $csv->setOffset($num)->setLimit(25)->fetchAll();
+
+                        for($i=0;$i<sizeof($records);$i++){ // Not checking for existing at this point.
+                            $postcode = new Postcode();
+                            $postcode->setPostcode($records[$i][0]);
+                            $postcode->setLat($records[$i][42]);
+                            $postcode->setLon($records[$i][43]);
+                            $output->writeLn(['lat '.$postcode->getlat(),'lon '.$postcode->getlon()]);
+
+                            $em->persist($postcode);
+                            $em->flush();
+                            $output->writeLn(['ID '.$postcode->getId()]);
+                            $num++;
+                        }
+
+
+                    }
+                    $output->writeLn(["Num rows ".$numRows]);
+                    $output->writeLn(['Num Records',$num]);
                 }
-                
-                
             }
-             $output->writeLn(["Num rows ".$numRows]);
-           $output->writeLn(['Num Records',$num]);
+            
+            
             
             $filesystem->remove([$path]);
             $output->writeLn(['ok']);
