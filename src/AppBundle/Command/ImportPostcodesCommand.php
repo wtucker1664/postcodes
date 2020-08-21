@@ -63,9 +63,9 @@ class ImportPostcodesCommand extends Command {
             $files = scandir($data);
             
             for($m=0;$m<sizeof($files);$m++){
-                if(\preg_match('/(\.csv)/',$files[$i])){
-                   $output->writeLn([$files[$i]]);
-                   $csv = Reader::createFromPath($path.'/Data/'.$files[$i], 'r'); 
+                if(\preg_match('/(\.csv)/',$files[$m])){
+                   $output->writeLn([$files[$m]]);
+                   $csv = Reader::createFromPath($path.'/Data/'.$files[$m], 'r'); 
             
                     $numRows = $csv->each(function ($row) {
                         return true;
