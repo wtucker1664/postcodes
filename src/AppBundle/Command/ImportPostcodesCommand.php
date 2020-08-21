@@ -81,10 +81,10 @@ class ImportPostcodesCommand extends Command {
                     // long 43
                     // Going to leave output->writeLn in for now.
 
-                    $r = ceil($numRows/25);
+                    $r = ceil($numRows/1000);
                     $num = 1;
                     for($n=0;$n<$r;$n++){
-                        $records = $csv->setOffset($num)->setLimit(25)->fetchAll();
+                        $records = $csv->setOffset($num)->setLimit(1000)->fetchAll();
 
                         for($i=0;$i<sizeof($records);$i++){ // Not checking for existing at this point.
                             $postcode = new Postcode();
