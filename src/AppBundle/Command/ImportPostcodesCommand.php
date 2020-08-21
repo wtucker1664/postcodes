@@ -41,7 +41,6 @@ class ImportPostcodesCommand extends Command {
     {
         $em = $this->container->get('doctrine')->getManager();
         $zipfile = $input->getArgument('zipfile');
-        $output->writeLn(['This is a test']);
         $output->writeln('zipfile: '.$zipfile);
         $filesystem = new Filesystem();
         $path = $this->projectDir.'/../var/unziped';
@@ -63,6 +62,10 @@ class ImportPostcodesCommand extends Command {
             
             $csv = Reader::createFromPath($path.'/Data/ONSPD_MAY_2020_UK.csv', 'r'); // Forgotten this was hard coded would have changed this also to pick up the file from teh directory.
             
+            $numRows = $csv->each(function ($row) {
+                return true;
+            });
+           
            // $headers = $csv->fetchOne();
 //            for($i=0;$i<sizeof($headers);$i++){
 //                $output->writeLn([$headers[$i],"Header number ".$i]);
@@ -71,22 +74,32 @@ class ImportPostcodesCommand extends Command {
             // postcode 0
             // lat 42
             // long 43
-           // Fixing this at 25 to save time if I have time later I will fix to add all records.
+           
             
             // Going to leave output->writeLn in for now.
-            $records = $csv->setOffset(1)->setLimit(25)->fetchAll();
-            for($i=0;$i<sizeof($records);$i++){ // Not checking for existing at this point.
-                $postcode = new Postcode();
-                $postcode->setPostcode($records[$i][0]);
-                $postcode->setLat($records[$i][42]);
-                $postcode->setLon($records[$i][43]);
-                $output->writeLn(['lat '.$postcode->getlat(),'lon '.$postcode->getlon()]);
+            $r = ceil($numRows/25);
+            $num = 1;
+            $continue = false;
+            for($n=0;$n<$r;$n++){
+                $records = $csv->setOffset($num)->setLimit(25)->fetchAll();
+                
+                for($i=0;$i<sizeof($records);$i++){ // Not checking for existing at this point.
+                    $postcode = new Postcode();
+                    $postcode->setPostcode($records[$i][0]);
+                    $postcode->setLat($records[$i][42]);
+                    $postcode->setLon($records[$i][43]);
+                    $output->writeLn(['lat '.$postcode->getlat(),'lon '.$postcode->getlon()]);
 
-                $em->persist($postcode);
-                $em->flush();
-                $output->writeLn(['ID '.$postcode->getId()]);
+                    $em->persist($postcode);
+                    $em->flush();
+                    $output->writeLn(['ID '.$postcode->getId()]);
+                    $num++;
+                }
+                
+                
             }
-            $output->writeLn(['Num Records',sizeof($records)]);
+             $output->writeLn(["Num rows ".$numRows]);
+           $output->writeLn(['Num Records',$num]);
             
             $filesystem->remove([$path]);
             $output->writeLn(['ok']);
