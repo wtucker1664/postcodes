@@ -24,16 +24,15 @@ class PostcodeRepository extends \Doctrine\ORM\EntityRepository
     }
     
     public function findByLatLonPostcode($lat,$lon){
-        $em =  $this->getEntityManager();
-        $raw = 'SELECT * FROM postcode p where lat = :lat and lon = :lon ORDER BY p.postcode ASC';
-        
-        $statement = $em->getConnection()->prepare($raw);
-        
-        $statement->bindValue('lat',$lat);
-        $statement->bindValue('lon',$lon);
-        $statement->execute();
+        $qb =  $this->createQueryBuilder('p');
+        $qb->select('p.id,p.postcode,p.lat,p.lon');
 
-        return $statement->fetchAll();
+        $qb->where('p.lat = :lat and p.lon = :lon');
+
+        $qb->setParameter('lat',$lat);
+        $qb->setParameter('lon',$lon);
+
+        return $qb->getQuery()->getResult();
         
     }
 }
