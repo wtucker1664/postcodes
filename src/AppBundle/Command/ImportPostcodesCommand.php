@@ -13,6 +13,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use AppBundle\Entity\Postcode;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportPostcodesCommand extends Command {
     // the name of the command (the part after "bin/console")
@@ -70,7 +71,7 @@ class ImportPostcodesCommand extends Command {
                     $numRows = $csv->each(function ($row) {
                         return true;
                     });
-
+                    $bar = new ProgressBar($output,$numRows);
                    // $headers = $csv->fetchOne();
         //            for($i=0;$i<sizeof($headers);$i++){
         //                $output->writeLn([$headers[$i],"Header number ".$i]);
@@ -80,28 +81,30 @@ class ImportPostcodesCommand extends Command {
                     // lat 42
                     // long 43
                     // Going to leave output->writeLn in for now.
-
+                    $bar->start();
                     $r = ceil($numRows/1000);
                     $num = 1;
                     for($n=0;$n<$r;$n++){
                         $records = $csv->setOffset($num)->setLimit(1000)->fetchAll();
-
+                        
                         for($i=0;$i<sizeof($records);$i++){ // Not checking for existing at this point.
                             $postcode = new Postcode();
                             $postcode->setPostcode($records[$i][0]);
                             $postcode->setLat($records[$i][42]);
                             $postcode->setLon($records[$i][43]);
-                            $output->writeLn(['lat '.$postcode->getlat(),'lon '.$postcode->getlon()]);
+                            //$output->writeLn(['lat '.$postcode->getlat(),'lon '.$postcode->getlon()]);
 
                             $em->persist($postcode);
                             $em->flush();
-                            $output->writeLn(['ID '.$postcode->getId()]);
+                            $bar->advance();
+                            //$output->writeLn(['ID '.$postcode->getId()]);
                             $num++;
                         }
 
 
                     }
-                    $output->writeLn(["Num rows ".$numRows]);
+                    $bar->finish();
+                   // $output->writeLn(["Num rows ".$numRows]);
                     $output->writeLn(['Num Records',$num]);
                 }
             }

@@ -12,7 +12,7 @@ class PostcodeRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findByPartialPostcode($pPostcode){
         $em =  $this->getEntityManager();
-        $raw = 'SELECT * FROM postcode p where postcode LIKE :post ORDER BY p.postcode ASC';
+        $raw = 'SELECT p.* FROM postcode p where p.postcode LIKE :post ORDER BY p.postcode ASC';
         
         $statement = $em->getConnection()->prepare($raw);
         
@@ -28,6 +28,8 @@ class PostcodeRepository extends \Doctrine\ORM\EntityRepository
         $qb->select('p.id,p.postcode,p.lat,p.lon');
 
         $qb->where('p.lat = :lat and p.lon = :lon');
+
+        $qb->orderBy('p.postcode');
 
         $qb->setParameter('lat',$lat);
         $qb->setParameter('lon',$lon);
