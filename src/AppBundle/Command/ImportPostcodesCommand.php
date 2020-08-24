@@ -35,13 +35,15 @@ class ImportPostcodesCommand extends Command {
         ->setDescription('Imports postcodes');
         $this
         // configure an argument
-        ->addArgument('zipfile', InputArgument::REQUIRED, 'Location of zip file on system');
+        ->addArgument('zipfile', InputArgument::REQUIRED, 'Location of zip file on system')
+        ->addArgument('format', InputArgument::REQUIRED, 'Output time scale');;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->container->get('doctrine')->getManager();
         $zipfile = $input->getArgument('zipfile');
+        $format = $input->getArgument('format');
         $output->writeln('zipfile: '.$zipfile);
         $filesystem = new Filesystem();
         $path = $this->projectDir.'/../var/unziped';
@@ -72,6 +74,7 @@ class ImportPostcodesCommand extends Command {
                         return true;
                     });
                     $bar = new ProgressBar($output,$numRows);
+                    $bar->setFormat($format);
                    // $headers = $csv->fetchOne();
         //            for($i=0;$i<sizeof($headers);$i++){
         //                $output->writeLn([$headers[$i],"Header number ".$i]);

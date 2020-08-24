@@ -91,7 +91,7 @@ bin/console doctrine:schema:update --force
 
 download the zip file and run as follows
 
-bin/console app:import-postcodes /var/www/html/postcodes/2020-05.zip
+bin/console app:import-postcodes /var/www/html/postcodes/2020-05.zip very_verbose
 
 If I had more time I would have liked to fix the issues which would be caused running the same file more than once
 and have it download by it's self rather than having to pass in the location. Also with the database I may with more
